@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "id": "lanius.security-headers",
+  "name": "Security Headers",
+  "version": "1.0.0",
+  "description": "Passively reports missing browser security headers without sending additional requests.",
+  "author": {
+    "name": "Lanius"
+  },
+  "published_at": "2026-09-30T10:00:00Z",
+  "categories": [
+    "scanner",
+    "passive"
+  ],
+  "compatibility": {
+    "lanius": ">=0.1,<1",
+    "sdk": ">=1.1,<2"
+  },
+  "backend": {
+    "runtime": "trusted",
+    "entrypoint": "plugin.py"
+  },
+  "permissions": [],
+  "integrity": {
+    "files": {
+      "plugin.py": "850213dfaa4e2f232edea5adf4758ff73dfe5bef2f3bbc5b0f4dfe41e9e41681"
+    }
+  }
+}

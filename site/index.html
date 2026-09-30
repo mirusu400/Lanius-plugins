@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lanius Plugins</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      body { margin: 0; background: #0b1016; color: #dce7f3; }
+      main { width: min(880px, calc(100% - 32px)); margin: 64px auto; }
+      h1 { margin-bottom: 8px; font-size: clamp(2rem, 7vw, 4rem); letter-spacing: -0.05em; }
+      .lead { color: #91a5ba; max-width: 650px; line-height: 1.6; }
+      .links { display: flex; gap: 12px; flex-wrap: wrap; margin: 28px 0 40px; }
+      a { color: #7fd7ff; }
+      .links a { border: 1px solid #263747; border-radius: 999px; padding: 9px 14px; text-decoration: none; }
+      #plugins { display: grid; gap: 14px; }
+      article { border: 1px solid #1e2d3a; border-radius: 14px; padding: 20px; background: #101821; }
+      article h2 { margin: 0 0 8px; font-size: 1.1rem; }
+      article p { color: #9cb0c4; margin: 0 0 14px; line-height: 1.5; }
+      .meta { color: #6f879d; font: 0.85rem ui-monospace, SFMono-Regular, monospace; }
+      .error { color: #ffadad; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Lanius Plugins</h1>
+      <p class="lead">The signed official catalogue for Lanius. Package code, manifests, and every published version are publicly reviewable.</p>
+      <nav class="links">
+        <a href="index.json">Catalogue JSON</a>
+        <a href="bootstrap.json">Trust bootstrap</a>
+        <a href="https://github.com/mirusu400/Lanius-plugins">Source repository</a>
+      </nav>
+      <section id="plugins" aria-live="polite">Loading catalogue…</section>
+    </main>
+    <script>
+      const container = document.querySelector('#plugins');
+      fetch('./index.json')
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json();
+        })
+        .then((catalogue) => {
+          container.textContent = '';
+          for (const plugin of catalogue.plugins) {
+            const card = document.createElement('article');
+            const title = document.createElement('h2');
+            const description = document.createElement('p');
+            const meta = document.createElement('div');
+            title.textContent = plugin.name;
+            description.textContent = plugin.description;
+            meta.className = 'meta';
+            meta.textContent = `${plugin.id} · v${plugin.releases[0].version} · ${plugin.categories.join(', ')}`;
+            card.append(title, description, meta);
+            container.append(card);
+          }
+        })
+        .catch((error) => {
+          container.className = 'error';
+          container.textContent = `Could not load catalogue: ${error.message}`;
+        });
+    </script>
+  </body>
+</html>
+

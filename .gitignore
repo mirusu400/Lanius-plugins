@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+dist/
+.DS_Store
+
+# Signing keys must only live in GitHub Actions secrets or another secret store.
+*.key
+*.pem
+

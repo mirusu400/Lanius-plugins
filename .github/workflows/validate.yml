@@ -1,0 +1,33 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check out Lanius SDK
+        uses: actions/checkout@v6
+        with:
+          repository: mirusu400/Lanius
+          path: .lanius
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Validate source manifests
+        run: python tools/build_catalogue.py --check
+      - name: Test against current Lanius
+        env:
+          PYTHONPATH: ${{ github.workspace }}/.lanius/engine
+        run: pytest -q
+

@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "id": "lanius.request-randomizer",
+  "name": "Request Randomizer",
+  "version": "1.0.0",
+  "description": "Replaces explicit request placeholders with fresh alphanumeric, numeric, or UUID values.",
+  "author": {
+    "name": "Lanius"
+  },
+  "published_at": "2026-09-30T10:00:00Z",
+  "categories": [
+    "traffic",
+    "utility"
+  ],
+  "compatibility": {
+    "lanius": ">=0.1,<1",
+    "sdk": ">=1.1,<2"
+  },
+  "backend": {
+    "runtime": "trusted",
+    "entrypoint": "plugin.py"
+  },
+  "permissions": [],
+  "integrity": {
+    "files": {
+      "plugin.py": "ed2bdc01d62cc093cd0428f51aef80767824be1c2debdf31de03af3ee9db96ae"
+    }
+  }
+}

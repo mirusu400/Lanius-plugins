@@ -1,0 +1,5 @@
+cryptography>=48
+mitmproxy>=12.2.3
+packaging>=26
+pytest>=9.1
+
