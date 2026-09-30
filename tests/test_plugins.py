@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import re
+from urllib.parse import parse_qs, urlsplit
 
 from app.plugin_registry import ContributionRegistry
 from mitmproxy.test import tflow
@@ -70,9 +70,12 @@ def test_request_randomizer_reuses_each_value_within_one_request() -> None:
     addon.request(flow)
 
     assert b"#RANDOM" not in flow.request.content
-    numbers = re.findall(r"\d{8}", flow.request.path)
+    parsed = urlsplit(flow.request.path)
+    path_number = parsed.path.rsplit("/", 1)[1]
+    query_number = parse_qs(parsed.query)["again"][0]
     body_number = flow.request.content.decode().split("=", 1)[1]
-    assert len(numbers) == 2 and numbers[0] == numbers[1] == body_number
+    assert path_number == query_number == body_number
+    assert len(path_number) == 8 and path_number.isdigit()
     first, second = flow.request.headers["X-Trace"].split(":")
     assert first == second and len(first) == 16
     assert addon.stats({}) == {
@@ -80,4 +83,3 @@ def test_request_randomizer_reuses_each_value_within_one_request() -> None:
         "placeholders_replaced": 6,
     }
     registry.dispose_owner("lanius.request-randomizer")
-
