@@ -47,7 +47,8 @@ dist/                            generated Pages artifact (not committed)
 Source manifests contain SHA-256 hashes but no signatures. On `main`, GitHub
 Actions verifies the plugins against the current Lanius SDK, signs each package
 manifest, builds deterministic ZIP archives, signs the catalogue, and deploys
-the result to Pages.
+the result to Pages. Before deployment it verifies the existing live catalogue
+signature and refuses to remove or alter metadata for a published version.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the release workflow and
 [SECURITY.md](SECURITY.md) for vulnerability reporting.

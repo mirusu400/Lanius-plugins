@@ -3,8 +3,10 @@ from __future__ import annotations
 import base64
 import json
 from pathlib import Path
+from copy import deepcopy
 
 from app.plugin_catalogue import CatalogueSource, verify_catalogue
+from app import plugin_packages as lanius_plugin_packages
 from app.plugin_packages import PluginPackageManager
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
@@ -13,7 +15,15 @@ from tools import build_catalogue
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_source_manifests_and_signed_build_are_accepted_by_lanius(tmp_path) -> None:
+def test_source_manifests_and_signed_build_are_accepted_by_lanius(
+    tmp_path, monkeypatch
+) -> None:
+    # The test uses an ephemeral private key with the production key ID. Once
+    # Lanius ships the pinned official key, temporarily remove that trust root
+    # so the generated package can still exercise the complete installer.
+    monkeypatch.setattr(
+        lanius_plugin_packages, "OFFICIAL_PACKAGE_KEYS", {}, raising=False
+    )
     releases = build_catalogue.load_plugins(ROOT / "plugins")
     revoked = build_catalogue.load_revocations(
         ROOT / "registry" / "revoked.json", releases
@@ -80,3 +90,26 @@ def test_signed_archives_are_reproducible() -> None:
     assert first == second
     assert base64.b64decode(build_catalogue.public_key_base64(key), validate=True)
 
+
+def test_published_release_metadata_is_immutable(tmp_path) -> None:
+    releases = build_catalogue.load_plugins(ROOT / "plugins")
+    key = Ed25519PrivateKey.generate()
+    current = build_catalogue.build(
+        releases,
+        [],
+        tmp_path / "site",
+        ROOT / "site",
+        build_catalogue.DEFAULT_BASE_URL,
+        key,
+        key,
+    )
+    previous = deepcopy(current)
+    build_catalogue.ensure_release_immutability(previous, current)
+
+    current["plugins"][0]["releases"][0]["sha256"] = "0" * 64
+    try:
+        build_catalogue.ensure_release_immutability(previous, current)
+    except build_catalogue.BuildError as exc:
+        assert "metadata changed" in str(exc)
+    else:
+        raise AssertionError("changed release metadata was accepted")

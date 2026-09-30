@@ -17,7 +17,10 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any
+from urllib.error import HTTPError
+from urllib.request import urlopen
 
+from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from packaging.specifiers import InvalidSpecifier, SpecifierSet
@@ -30,6 +33,7 @@ CATALOGUE_KEY_ID = "lanius-catalogue-2026-01"
 PLUGIN_ID = re.compile(r"^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
+MAX_CATALOGUE_BYTES = 5 * 1024 * 1024
 
 
 class BuildError(ValueError):
@@ -263,6 +267,69 @@ def _signed(value: dict[str, Any], key: Ed25519PrivateKey, key_id: str) -> dict[
     return result
 
 
+def _release_index(catalogue: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]]:
+    return {
+        (str(plugin["id"]), str(release["version"])): release
+        for plugin in catalogue.get("plugins", [])
+        for release in plugin.get("releases", [])
+    }
+
+
+def ensure_release_immutability(
+    previous: dict[str, Any], current: dict[str, Any]
+) -> None:
+    before = _release_index(previous)
+    after = _release_index(current)
+    removed = before.keys() - after.keys()
+    if removed:
+        plugin_id, version = sorted(removed)[0]
+        raise BuildError(f"published release was removed: {plugin_id} {version}")
+    for identity in before.keys() & after.keys():
+        if canonical(before[identity]) != canonical(after[identity]):
+            plugin_id, version = identity
+            raise BuildError(
+                f"published release metadata changed: {plugin_id} {version}"
+            )
+
+
+def check_previous_catalogue(
+    url: str,
+    current: dict[str, Any],
+    catalogue_key: Ed25519PrivateKey,
+) -> bool:
+    """Verify and compare the deployed catalogue; return False on first deploy."""
+
+    try:
+        with urlopen(url, timeout=15) as response:
+            payload = response.read(MAX_CATALOGUE_BYTES + 1)
+    except HTTPError as exc:
+        if exc.code == 404:
+            return False
+        raise BuildError(f"cannot download previous catalogue: HTTP {exc.code}") from exc
+    except OSError as exc:
+        raise BuildError(f"cannot download previous catalogue: {exc}") from exc
+    if len(payload) > MAX_CATALOGUE_BYTES:
+        raise BuildError("previous catalogue exceeds 5 MiB")
+    try:
+        previous = _object(
+            json.loads(payload.decode("utf-8")), "previous catalogue"
+        )
+        signature = _object(previous.get("signature"), "previous signature")
+        if signature.get("algorithm") != "ed25519":
+            raise BuildError("previous catalogue signature algorithm is not ed25519")
+        if signature.get("key_id") != CATALOGUE_KEY_ID:
+            raise BuildError("previous catalogue has an unexpected signing key")
+        encoded = _string(signature.get("value"), "previous signature value")
+        unsigned = {key: value for key, value in previous.items() if key != "signature"}
+        catalogue_key.public_key().verify(
+            base64.b64decode(encoded, validate=True), canonical(unsigned)
+        )
+    except (UnicodeError, ValueError, InvalidSignature) as exc:
+        raise BuildError("previous catalogue signature is invalid") from exc
+    ensure_release_immutability(previous, current)
+    return True
+
+
 def _zip_entry(name: str, data: bytes) -> zipfile.ZipInfo:
     entry = zipfile.ZipInfo(name, ZIP_TIMESTAMP)
     entry.compress_type = zipfile.ZIP_DEFLATED
@@ -396,6 +463,10 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--check", action="store_true", help="validate without building")
     parser.add_argument("--output", type=Path, default=ROOT / "dist")
     parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
+    parser.add_argument(
+        "--previous-url",
+        help="reject changes to releases in an already published catalogue",
+    )
     return parser.parse_args(argv)
 
 
@@ -421,6 +492,15 @@ def main(argv: list[str] | None = None) -> int:
             package_key,
             catalogue_key,
         )
+        if args.previous_url:
+            found = check_previous_catalogue(
+                args.previous_url, catalogue, catalogue_key
+            )
+            print(
+                "verified previous catalogue immutability"
+                if found
+                else "no previous catalogue found; treating this as the first deploy"
+            )
         print(
             f"built {len(catalogue['plugins'])} plugin(s) in {args.output.resolve()}"
         )
