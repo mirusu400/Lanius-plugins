@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "id": "lanius.parameter-analyzer",
+  "name": "Parameter Analyzer",
+  "version": "1.0.0",
+  "description": "Analyzes captured HTTP parameters and explicitly probes for hidden input names.",
+  "author": {
+    "name": "Lanius"
+  },
+  "published_at": "2026-10-01T11:00:00Z",
+  "categories": [
+    "analysis",
+    "scanner"
+  ],
+  "compatibility": {
+    "lanius": ">=0.2,<1",
+    "sdk": ">=1.2,<2"
+  },
+  "backend": {
+    "runtime": "trusted",
+    "entrypoint": "plugin.py"
+  },
+  "ui": {
+    "views": [
+      {
+        "id": "parameters",
+        "title": "Parameter Analyzer",
+        "entrypoint": "ui/index.html"
+      }
+    ]
+  },
+  "permissions": [
+    "actions.invoke"
+  ],
+  "integrity": {
+    "files": {
+      "plugin.py": "3bcb89c20319fc96136d92f462abd6c0b8229c3a598effb3756b9e78abb10f63",
+      "ui/app.js": "01544a9081b85cead6be714e26cdf1180a785b765a426eec43604cb89c3a21cb",
+      "ui/index.html": "b2107d59290ccbfc4cb6cd80d5963eef6f3aaafc8b8e8af1a8798a38abe550db"
+    }
+  }
+}

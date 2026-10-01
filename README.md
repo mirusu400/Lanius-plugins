@@ -25,14 +25,22 @@ Strict-Transport-Security, and X-Content-Type-Options headers without sending
 new traffic. It is inspired by PortSwigger's
 [passive scan check example](https://portswigger.net/burp/documentation/desktop/extend-burp/custom-scan-checks/creating/passive-worked-example).
 
+### Parameter Analyzer
+
+Analyzes captured parameters and response reflection in a plugin view, and
+explicitly probes candidate hidden inputs through Lanius's bounded active
+scanner. Inspired by [Paramalyzer](https://jgillam.github.io/burp-paramalyzer/)
+and [Param Miner](https://portswigger.net/burp/documentation/desktop/testing-workflow/analyzing/hidden-inputs).
+
 ### Request Randomizer
 
 Replaces `#RANDOM#`, `#RANDOMNUM#`, and `#UUID#` markers in outgoing requests.
 It is inspired by the Burp BApp Store's
 [Request Randomizer](https://portswigger.net/bappstore/36d6d7e35dac489b976c2f120ce34ae2).
 
-Both plugins are independent Lanius SDK implementations and make no outbound
-connections of their own.
+All three plugins are independent Lanius SDK implementations and make no
+outbound connections of their own. Parameter Analyzer's active probes use
+the host's explicitly started scanner and Replay path.
 
 ## Repository layout
 

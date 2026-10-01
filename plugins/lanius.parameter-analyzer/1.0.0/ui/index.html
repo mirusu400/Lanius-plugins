@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Parameter Analyzer</title>
+    <style>
+      :root { color-scheme: dark; font: 13px system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 20px; background: #111820; color: #e4ebf2; }
+      main { display: grid; gap: 16px; max-width: 1500px; margin: auto; }
+      section { background: #18232e; border: 1px solid #314252; border-radius: 10px; padding: 16px; }
+      h1, h2, p { margin: 0 0 10px; }
+      h1 { font-size: 21px; } h2 { font-size: 16px; }
+      p, .muted { color: #aebecd; line-height: 1.5; }
+      .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      button, input { border: 1px solid #526779; border-radius: 6px; padding: 8px 10px; font: inherit; }
+      button { background: #274663; color: #eef6ff; cursor: pointer; }
+      button:hover:not(:disabled) { border-color: #8cc7fa; }
+      button:disabled { opacity: .55; cursor: default; }
+      input { background: #101923; color: #eef6ff; min-width: 230px; }
+      #search { min-width: 300px; }
+      .table-wrap { max-height: 55vh; overflow: auto; border: 1px solid #314252; border-radius: 7px; }
+      table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+      th, td { padding: 8px 10px; border-bottom: 1px solid #2b3946; text-align: left; vertical-align: top; }
+      th { position: sticky; top: 0; background: #223342; white-space: nowrap; z-index: 1; }
+      tbody tr:hover { background: #203140; }
+      code { color: #b7d6f6; overflow-wrap: anywhere; }
+      .number { text-align: right; font-variant-numeric: tabular-nums; }
+      .secret { color: #f0c582; }
+      #error { color: #ff9f9f; white-space: pre-wrap; min-height: 1.2em; }
+      #status, #mine-status { min-height: 1.2em; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>Parameter Analyzer</h1>
+        <p>Review parameters in captured, in-scope HTTP History. Reflection is a lead for manual testing, not a confirmed vulnerability.</p>
+        <div class="controls">
+          <button id="analyze" type="button">Analyze History</button>
+          <button id="cancel" type="button" disabled>Cancel</button>
+          <input id="search" type="search" placeholder="Filter host, name, or type" aria-label="Filter parameters">
+        </div>
+        <p id="status" class="muted" role="status">Ready. Capture normal browsing traffic, then analyze.</p>
+        <p id="error" role="alert"></p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Host</th><th>Type</th><th>Name</th><th class="number">Requests</th><th class="number">Paths</th><th class="number">Values</th><th class="number">Reflected</th><th>Format</th><th>Example</th><th>Sample flow</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </section>
+      <section>
+        <h2>Find hidden parameters</h2>
+        <p>Enter a captured flow ID or use “Find hidden parameters” from its History menu. This starts a bounded active scan and sends requests to that target.</p>
+        <div class="controls">
+          <input id="flow-id" type="text" placeholder="Captured flow ID" aria-label="Captured flow ID">
+          <button id="mine" type="button">Start mining</button>
+        </div>
+        <p id="mine-status" class="muted" role="status">Findings and progress appear in Issues.</p>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
