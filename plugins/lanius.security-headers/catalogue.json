@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "id": "lanius.security-headers",
+  "details": "Passively checks captured responses for missing browser security headers. It checks HTML responses for Content-Security-Policy, HTTPS responses for Strict-Transport-Security, and successful responses for X-Content-Type-Options. It sends no additional requests.",
+  "homepage": "https://github.com/mirusu400/Lanius-plugins/tree/main/plugins/lanius.security-headers",
+  "icon": "icon.png"
+}

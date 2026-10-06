@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.error import HTTPError
+from urllib.parse import urlparse
 from urllib.request import urlopen
 
 from cryptography.exceptions import InvalidSignature
@@ -34,6 +35,7 @@ PLUGIN_ID = re.compile(r"^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 MAX_CATALOGUE_BYTES = 5 * 1024 * 1024
+MAX_ICON_BYTES = 64 * 1024
 
 
 class BuildError(ValueError):
@@ -212,6 +214,61 @@ def load_revocations(path: Path, releases: list[PluginRelease]) -> list[dict[str
     return result
 
 
+def load_card_metadata(
+    plugins_directory: Path, releases: list[PluginRelease]
+) -> dict[str, dict[str, str]]:
+    """Read mutable catalogue card content without changing release archives."""
+    known_ids = {release.plugin_id for release in releases}
+    result: dict[str, dict[str, str]] = {}
+    for plugin_id in sorted(known_ids):
+        path = plugins_directory / plugin_id / "catalogue.json"
+        if not path.exists():
+            continue
+        try:
+            item = _object(json.loads(path.read_text(encoding="utf-8")), "card metadata")
+        except (OSError, ValueError, UnicodeError) as exc:
+            raise BuildError(f"cannot read {path}: {exc}") from exc
+        if item.get("schema") != 1 or item.get("id") != plugin_id:
+            raise BuildError(f"card metadata schema or id is invalid: {plugin_id}")
+        unknown_fields = item.keys() - {"schema", "id", "details", "homepage", "icon"}
+        if unknown_fields:
+            raise BuildError(f"unsupported card metadata field: {sorted(unknown_fields)[0]}")
+        card: dict[str, str] = {}
+        if "details" in item:
+            details = _string(item["details"], "card details")
+            if len(details) > 8000:
+                raise BuildError("card details exceed 8,000 characters")
+            card["details"] = details
+        if "homepage" in item:
+            homepage = _string(item["homepage"], "card homepage")
+            parsed = urlparse(homepage)
+            if parsed.scheme != "https" or not parsed.netloc:
+                raise BuildError("card homepage must use HTTPS")
+            card["homepage"] = homepage
+        if "icon" in item:
+            relative = _safe_relative(item["icon"], "card icon")
+            icon_path = path.parent / relative
+            if (
+                not icon_path.resolve().is_relative_to(path.parent.resolve())
+                or icon_path.is_symlink()
+                or not icon_path.is_file()
+            ):
+                raise BuildError(f"card icon does not exist or is a symlink: {relative}")
+            suffix = icon_path.suffix.lower()
+            if suffix not in {".png", ".webp"}:
+                raise BuildError("card icon must be PNG or WebP")
+            image = icon_path.read_bytes()
+            if len(image) > MAX_ICON_BYTES or not (
+                image.startswith(b"\x89PNG\r\n\x1a\n") if suffix == ".png"
+                else image.startswith(b"RIFF") and image[8:12] == b"WEBP"
+            ):
+                raise BuildError("card icon is invalid or exceeds 64 KiB")
+            mime = "png" if suffix == ".png" else "webp"
+            card["icon"] = f"data:image/{mime};base64,{base64.b64encode(image).decode('ascii')}"
+        result[plugin_id] = card
+    return result
+
+
 def _private_key(variable: str) -> Ed25519PrivateKey:
     encoded = os.environ.get(variable)
     if not encoded:
@@ -374,7 +431,10 @@ def build(
     base_url: str,
     package_key: Ed25519PrivateKey,
     catalogue_key: Ed25519PrivateKey,
+    card_metadata: dict[str, dict[str, str]] | None = None,
 ) -> dict[str, Any]:
+    if card_metadata is None:
+        card_metadata = load_card_metadata(ROOT / "plugins", releases)
     _prepare_output(output)
     package_records: dict[tuple[str, str], dict[str, Any]] = {}
     for release in releases:
@@ -407,6 +467,7 @@ def build(
                 "description": latest["description"],
                 "author": _author_name(latest),
                 "categories": latest["categories"],
+                **card_metadata.get(plugin_id, {}),
                 "releases": [
                     package_records[(item.plugin_id, item.version)] for item in versions
                 ],
@@ -475,6 +536,9 @@ def main(argv: list[str] | None = None) -> int:
     try:
         releases = load_plugins(ROOT / "plugins")
         revocations = load_revocations(ROOT / "registry" / "revoked.json", releases)
+        card_metadata = load_card_metadata(
+            ROOT / "plugins", releases
+        )
         if args.check:
             print(f"validated {len(releases)} plugin release(s)")
             return 0
@@ -491,6 +555,7 @@ def main(argv: list[str] | None = None) -> int:
             args.base_url,
             package_key,
             catalogue_key,
+            card_metadata,
         )
         if args.previous_url:
             found = check_previous_catalogue(

@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "id": "lanius.parameter-analyzer",
+  "details": "Groups captured query, cookie, form, JSON, and XML parameters by host and name, then highlights possible response reflection. The plugin view analyzes in-scope HTTP History on demand. Find hidden parameters starts a bounded active scan only when requested; confirmed response differences are reported as informational issues. The plugin opens no network connection of its own.",
+  "homepage": "https://github.com/mirusu400/Lanius-plugins/tree/main/plugins/lanius.parameter-analyzer",
+  "icon": "icon.png"
+}

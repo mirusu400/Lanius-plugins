@@ -54,6 +54,15 @@ def test_source_manifests_and_signed_build_are_accepted_by_lanius(
         "lanius.request-randomizer",
         "lanius.security-headers",
     }
+    for plugin in verified["plugins"]:
+        directory = ROOT / "plugins" / plugin["id"]
+        source = json.loads((directory / "catalogue.json").read_text())
+        assert plugin["details"] == source["details"]
+        assert plugin["homepage"] == source["homepage"]
+        assert plugin["icon"].startswith("data:image/png;base64,")
+        assert base64.b64decode(plugin["icon"].split(",", 1)[1]) == (
+            directory / source["icon"]
+        ).read_bytes()
 
     trusted = tmp_path / "trusted.json"
     trusted.write_text(
@@ -107,6 +116,9 @@ def test_published_release_metadata_is_immutable(tmp_path) -> None:
     previous = deepcopy(current)
     build_catalogue.ensure_release_immutability(previous, current)
 
+    current["plugins"][0]["details"] = "Updated catalogue description"
+    build_catalogue.ensure_release_immutability(previous, current)
+
     current["plugins"][0]["releases"][0]["sha256"] = "0" * 64
     try:
         build_catalogue.ensure_release_immutability(previous, current)
@@ -114,3 +126,22 @@ def test_published_release_metadata_is_immutable(tmp_path) -> None:
         assert "metadata changed" in str(exc)
     else:
         raise AssertionError("changed release metadata was accepted")
+
+
+def test_card_metadata_rejects_invalid_icon_path(tmp_path) -> None:
+    directory = tmp_path / "lanius.parameter-analyzer"
+    directory.mkdir()
+    metadata = directory / "catalogue.json"
+    metadata.write_text(json.dumps({
+        "schema": 1,
+        "id": "lanius.parameter-analyzer",
+        "icon": "../outside.png",
+    }))
+    releases = build_catalogue.load_plugins(ROOT / "plugins")
+
+    try:
+        build_catalogue.load_card_metadata(tmp_path, releases)
+    except build_catalogue.BuildError as exc:
+        assert "card icon" in str(exc)
+    else:
+        raise AssertionError("icon outside registry was accepted")

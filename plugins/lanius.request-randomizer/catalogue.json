@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "id": "lanius.request-randomizer",
+  "details": "Replaces explicit #RANDOM#, #RANDOMNUM#, and #UUID# markers in outgoing requests with fresh alphanumeric, numeric, and UUID v4 values. Repeated markers of the same kind share one value within each request. Requests without these markers are left alone, and the plugin opens no network connection of its own.",
+  "homepage": "https://github.com/mirusu400/Lanius-plugins/tree/main/plugins/lanius.request-randomizer",
+  "icon": "icon.png"
+}

@@ -46,6 +46,8 @@ the host's explicitly started scanner and Replay path.
 
 ```text
 plugins/<plugin-id>/<version>/  immutable source releases
+plugins/<plugin-id>/catalogue.json  card details and icon filename
+plugins/<plugin-id>/icon.png        per-plugin icon (SVG source is optional)
 registry/revoked.json           signed revocation inputs
 tools/build_catalogue.py        validator, packager, and signer
 site/                            static catalogue landing page
@@ -57,6 +59,11 @@ Actions verifies the plugins against the current Lanius SDK, signs each package
 manifest, builds deterministic ZIP archives, signs the catalogue, and deploys
 the result to Pages. Before deployment it verifies the existing live catalogue
 signature and refuses to remove or alter metadata for a published version.
+Card metadata and icons are kept next to each plugin, outside published release
+directories, so descriptions and icons can be improved without changing
+immutable package archives. The
+build embeds each PNG icon as a signed data URL in `index.json`, letting Lanius
+show cached cards without an extra network request.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the release workflow and
 [SECURITY.md](SECURITY.md) for vulnerability reporting.
