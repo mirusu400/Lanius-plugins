@@ -2,7 +2,10 @@
 
 Collect related HTTP request/response pairs into an ordered investigation Flow.
 The **Flow** workspace tab, **Add to Flow…** context action, and HTTP MCP tools
-share the same project data. Requires **Lanius SDK 1.4**.
+share the same project data. Version **1.1.0** requires **Lanius SDK 1.5**. The Flow tab uses the main
+application's shared controls, palette, and typography, and follows theme/font
+changes live without replacing unsaved drafts. Version 1.0.0 remains available
+for SDK 1.4 hosts.
 
 ## Use
 

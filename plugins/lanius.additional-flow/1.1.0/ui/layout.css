@@ -1,0 +1,58 @@
+/* Flow-specific layout only. Controls, palette and typography come from theme.get. */
+html:not([data-lanius-theme-ready]) body { visibility: hidden; }
+body { margin: 0; }
+.toolbar { padding: 0.65em 1em; }
+.toolbar h3 { margin: 0; }
+#status { margin: 0; padding: 0.5em 1em; min-height: 2.4em; border-bottom: 1px solid var(--border); }
+.workspace { display: grid; grid-template-columns: 17em minmax(0, 1fr); min-height: calc(100vh - 6em); }
+.collections { padding: 1em 0.65em; border-right: 1px solid var(--border); }
+.search-label { padding: 0 0.35em 1em; }
+.collection { margin-bottom: 0.35em; padding: 0.75em; }
+.collection strong, .collection small { display: block; }
+.collection small { margin-top: 0.35em; }
+#flow-panel { min-width: 0; padding: 1em; }
+.empty { text-align: center; padding: 4em 2em; max-width: 48em; margin: auto; }
+.empty h3 { margin: 0 0 1em; }
+.flow-heading { display: flex; gap: 0.65em; align-items: end; }
+.flow-heading label { flex: 1; }
+.identity { display: flex; gap: 0.75em; align-items: center; margin: 0.75em 0 1em; }
+.identity code { overflow-wrap: anywhere; }
+.add-ids { display: flex; gap: 0.65em; align-items: end; margin: 1em 0 1.5em; }
+.add-ids label { flex: 1; }
+.evidence { display: grid; grid-template-columns: minmax(15em, 30%) minmax(0, 1fr); border-top: 1px solid var(--border); }
+.steps { padding: 1em 1em 1em 0; border-right: 1px solid var(--border); }
+.steps h3 { margin: 0 0 1em; }
+.entry { margin: 0.4em 0; padding: 0.75em; }
+.entry .url { display: block; overflow-wrap: anywhere; margin: 0.4em 0; }
+.detail { min-width: 0; padding: 1em 0 1em 1em; }
+.detail-heading { display: flex; align-items: center; gap: 0.65em; margin-bottom: 1em; }
+.detail-heading h3 { flex: 1; overflow-wrap: anywhere; margin: 0; }
+.step-actions { display: flex; gap: 0.5em; margin: 0.65em 0 1em; }
+.message { margin-top: 1.5em; }
+.message > div { display: flex; align-items: center; justify-content: space-between; gap: 0.65em; }
+.message h3 { margin: 0; }
+pre { max-height: 30em; overflow: auto; }
+#picker { max-width: 48em; margin: auto; padding: 1em; }
+#selection-summary { margin: 0.75em 0 1.5em; }
+.picker-list { margin: 1em 0; max-height: 20em; overflow: auto; }
+.picker-list button { display: flex; width: 100%; text-align: left; justify-content: space-between; margin: 0.4em 0; }
+#picker-create { border-top: 1px solid var(--border); padding-top: 1em; }
+#picker-create button { margin-top: 0.75em; }
+#create-dialog, #confirm-dialog { width: min(38em, 90vw); padding: 1em; }
+dialog label { margin-top: 1em; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 0.65em; margin-top: 1.5em; }
+#confirm-text { margin-top: 1em; }
+[hidden] { display: none !important; }
+@media (max-width: 950px) {
+  .workspace { grid-template-columns: 15em minmax(0, 1fr); }
+  .evidence { grid-template-columns: 1fr; }
+  .steps { border-right: 0; border-bottom: 1px solid var(--border); padding-right: 0; }
+  .detail { padding-left: 0; }
+  .flow-heading { flex-wrap: wrap; }
+  .flow-heading label { flex-basis: 100%; }
+}
+@media (max-width: 600px) {
+  .workspace { grid-template-columns: 1fr; }
+  .collections { border-right: 0; border-bottom: 1px solid var(--border); }
+  .identity, .step-actions { flex-wrap: wrap; }
+}

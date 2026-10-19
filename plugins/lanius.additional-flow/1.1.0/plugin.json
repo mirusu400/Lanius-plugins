@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "id": "lanius.additional-flow",
+  "name": "Additional Flow",
+  "version": "1.1.0",
+  "description": "Collect ordered request/response evidence with investigation notes, a Flow tab, and agent MCP tools.",
+  "author": {
+    "name": "Lanius"
+  },
+  "published_at": "2026-10-19T07:00:00Z",
+  "categories": [
+    "analysis",
+    "workflow"
+  ],
+  "compatibility": {
+    "lanius": ">=0.2,<1",
+    "sdk": ">=1.5,<2"
+  },
+  "backend": {
+    "runtime": "trusted",
+    "entrypoint": "plugin.py"
+  },
+  "ui": {
+    "views": [
+      {
+        "id": "flow",
+        "title": "Flow",
+        "entrypoint": "ui/index.html",
+        "placement": "tab"
+      }
+    ]
+  },
+  "permissions": [
+    "actions.invoke",
+    "clipboard.write",
+    "ui.downloads"
+  ],
+  "integrity": {
+    "files": {
+      "plugin.py": "391daabd7f1a74d8f2192328a249b8f89297b69b9a5e00901bff4b606eb2f4f3",
+      "ui/app.js": "d3c32561d3d5d5530429703d4a56215c824000bf1f36c0bfae936a74dc7ddc1f",
+      "ui/index.html": "dae9e6e8c5f71db199b25dfe0134ef66f9dc987ca13361dcde628eb735ff519a",
+      "ui/layout.css": "fae4b500739e22dfe509b23ef9982d95e71d2a9f927bacd45ef0294ea05b723e"
+    }
+  }
+}
