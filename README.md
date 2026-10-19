@@ -18,6 +18,13 @@ fails the deployment instead of publishing with an unexpected trust root.
 
 ## Included plugins
 
+### Additional Flow
+
+Collects related request/response pairs into ordered, annotated investigation
+Flows. Includes a dedicated Flow tab, context-menu collection picker, durable
+captured evidence snapshots, and agent tools on the existing HTTP MCP endpoint.
+Requires Lanius SDK 1.4.
+
 ### Security Headers
 
 Passively reports missing Content-Security-Policy,
@@ -38,7 +45,7 @@ Replaces `#RANDOM#`, `#RANDOMNUM#`, and `#UUID#` markers in outgoing requests.
 It is inspired by the Burp BApp Store's
 [Request Randomizer](https://portswigger.net/bappstore/36d6d7e35dac489b976c2f120ce34ae2).
 
-All three plugins are independent Lanius SDK implementations and make no
+All four plugins are independent Lanius SDK implementations and make no
 outbound connections of their own. Parameter Analyzer's active probes use
 the host's explicitly started scanner and Replay path.
 

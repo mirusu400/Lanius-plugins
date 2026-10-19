@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="toolbar"><div><span class="eyebrow">ADDITIONAL FLOW</span><h1>Investigation flows</h1></div><span class="spacer"></span><button id="refresh">Refresh</button><button id="new" class="primary">New Flow</button></header>
+  <p id="status" role="status" aria-live="polite"></p>
+  <section id="picker" hidden>
+    <h2>Add evidence to a Flow</h2><p id="selection-summary"></p>
+    <label>Find a Flow<input id="picker-search" placeholder="Title or Flow ID"></label>
+    <div id="picker-list" class="picker-list"></div>
+    <form id="picker-create"><label>Or create a new Flow<input id="picker-title" maxlength="200" placeholder="e.g. Account ownership bypass" required></label><button class="primary">Create and add evidence</button></form>
+  </section>
+  <section id="workspace" class="workspace">
+    <aside class="collections"><label class="search-label">Find a Flow<input id="search" type="search" placeholder="Title, notes, or Flow ID"></label><div id="collections"></div><button id="more-flows" hidden>Load more Flows</button></aside>
+    <main id="flow-panel"><div id="empty" class="empty"><div class="empty-mark">↳</div><h2>Keep the evidence together</h2><p>Create a Flow, then use <strong>Add to Flow…</strong> in HTTP History or a request/response menu. Agents can save the same evidence through MCP.</p></div>
+      <section id="flow" hidden>
+        <div class="flow-heading"><label>Flow title<input id="title" maxlength="200"></label><button id="save">Save details</button><button id="delete-flow" class="danger">Delete Flow</button></div>
+        <div class="identity"><code id="flow-id"></code><button id="copy-id">Copy ID</button><span id="count"></span></div>
+        <label>Investigation notes<textarea id="description" rows="3" maxlength="20000" placeholder="What did you find? Why do these requests belong together?"></textarea></label>
+        <div class="add-ids"><label>Captured exchange IDs<textarea id="exchange-ids" rows="2" placeholder="Paste IDs, separated by spaces, commas, or newlines"></textarea></label><button id="add-ids">Add evidence</button></div>
+        <div class="evidence"><section class="steps"><h2>Evidence sequence</h2><div id="entries"></div></section><section class="detail"><div id="detail-empty" class="empty">Select a step to inspect the saved request and response.</div><div id="exchange" hidden>
+          <div class="detail-heading"><h2 id="detail-title"></h2><button id="remove" class="danger">Remove step</button></div>
+          <label>Step notes<textarea id="note" rows="3" maxlength="2000"></textarea></label><div class="step-actions"><button id="save-note">Save note</button><button id="up">↑ Move up</button><button id="down">↓ Move down</button></div>
+          <p id="capture-status" class="muted"></p>
+          <section class="message"><div><h3>Request</h3><button id="download-request">Download captured body</button></div><pre id="request"></pre></section>
+          <section class="message"><div><h3>Response</h3><button id="download-response">Download captured body</button></div><pre id="response"></pre></section>
+        </div></section></div>
+      </section>
+    </main>
+  </section>
+  <dialog id="create-dialog"><form id="create-form"><h2>New Flow</h2><label>Title<input id="new-title" maxlength="200" required placeholder="e.g. Login → privilege change → verification"></label><label>Description<textarea id="new-description" rows="3" maxlength="20000"></textarea></label><div class="dialog-actions"><button id="cancel-create" type="button">Cancel</button><button class="primary">Create Flow</button></div></form></dialog>
+  <dialog id="confirm-dialog"><form method="dialog"><h2 id="confirm-title"></h2><p id="confirm-text"></p><div class="dialog-actions"><button value="cancel">Cancel</button><button value="confirm" class="danger">Delete</button></div></form></dialog>
+  <script src="app.js"></script>
+</body>
+</html>

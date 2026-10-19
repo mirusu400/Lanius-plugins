@@ -54,6 +54,7 @@ def test_security_headers_registers_with_scanner_sdk() -> None:
         "settings": 3,
         "passive_scanners": 1,
         "active_scanners": 0,
+        "mcp_tools": 0,
     }
     registry.dispose_owner("lanius.security-headers")
 

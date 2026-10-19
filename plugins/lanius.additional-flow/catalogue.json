@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "id": "lanius.additional-flow",
+  "details": "Save ordered request/response evidence in a dedicated Flow tab. Add captured exchanges from History or message context menus, annotate and reorder steps, and let agents create or extend Flows through Lanius's existing HTTP MCP connection. Exact captured bodies are preserved in project storage independently of History, including binary data. Requires SDK 1.4. No outbound connections are opened.",
+  "homepage": "https://github.com/mirusu400/Lanius-plugins/tree/main/plugins/lanius.additional-flow",
+  "icon": "icon.png"
+}
