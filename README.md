@@ -45,9 +45,17 @@ Replaces `#RANDOM#`, `#RANDOMNUM#`, and `#UUID#` markers in outgoing requests.
 It is inspired by the Burp BApp Store's
 [Request Randomizer](https://portswigger.net/bappstore/36d6d7e35dac489b976c2f120ce34ae2).
 
-All four plugins are independent Lanius SDK implementations and make no
+### Dynamic Audit
+
+Starts a bounded dynamic scan from a domain's Target context menu. It selects
+representative captured request shapes and checks query, form, and JSON inputs
+for SQL error behavior, raw HTML reflection, server-side template expression
+evaluation, and open redirects. Non-idempotent methods are opt-in.
+
+All five plugins are independent Lanius SDK implementations and make no
 outbound connections of their own. Parameter Analyzer's active probes use
-the host's explicitly started scanner and Replay path.
+the host's explicitly started scanner and Replay path. Dynamic Audit does the
+same and requires Lanius SDK 1.6 for Target site actions.
 
 ## Repository layout
 

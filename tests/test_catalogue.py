@@ -51,6 +51,7 @@ def test_source_manifests_and_signed_build_are_accepted_by_lanius(
     verified = verify_catalogue(catalogue, source)
     assert {plugin["id"] for plugin in verified["plugins"]} == {
         "lanius.additional-flow",
+        "lanius.dynamic-audit",
         "lanius.parameter-analyzer",
         "lanius.request-randomizer",
         "lanius.security-headers",

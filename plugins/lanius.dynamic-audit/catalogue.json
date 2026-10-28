@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "id": "lanius.dynamic-audit",
+  "details": "Right-click an in-scope domain in Target to dynamically scan representative captured GET and HEAD request shapes. The plugin uses Lanius's bounded active scanner to check query, form, and top-level JSON inputs for database error behavior, raw HTML reflection, server-side template expression evaluation, and open redirects. It skips sensitive-looking inputs and non-idempotent methods by default, opens no sockets of its own, and sends no command-execution payloads.",
+  "homepage": "https://github.com/mirusu400/Lanius-plugins/tree/main/plugins/lanius.dynamic-audit",
+  "icon": "icon.png"
+}

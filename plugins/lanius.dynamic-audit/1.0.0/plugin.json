@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "id": "lanius.dynamic-audit",
+  "name": "Dynamic Audit",
+  "version": "1.0.0",
+  "description": "Dynamically probes captured domain inputs for several common web vulnerability signals.",
+  "author": {
+    "name": "Lanius"
+  },
+  "published_at": "2026-10-22T07:00:00Z",
+  "categories": [
+    "scanner",
+    "active"
+  ],
+  "compatibility": {
+    "lanius": ">=0.5,<1",
+    "sdk": ">=1.6,<2"
+  },
+  "backend": {
+    "runtime": "trusted",
+    "entrypoint": "plugin.py"
+  },
+  "permissions": [
+    "actions.invoke"
+  ],
+  "integrity": {
+    "files": {
+      "plugin.py": "9c69aa18df79a21f11253d98c7c5cb431ff8b18484fa185e088c54eaf45eaeeb"
+    }
+  }
+}
