@@ -52,7 +52,23 @@ representative captured request shapes and checks query, form, and JSON inputs
 for SQL error behavior, raw HTML reflection, server-side template expression
 evaluation, and open redirects. Non-idempotent methods are opt-in.
 
-All five plugins are independent Lanius SDK implementations and make no
+### JWT Toolkit
+
+Finds JSON Web Tokens in traffic and adds an editable **JWT** tab (decode, edit
+header/payload, re-sign with `none` or HS256/384/512) to message viewers,
+Replay, and Fuzzer. A passive check reports unsigned or guessable-secret
+tokens, missing/long expiry, key-source headers, tokens in URLs, and cookie
+flags. It sends no requests. Requires Lanius SDK 1.7.
+
+### Protobuf Editor
+
+Adds an editable **Protobuf** tab that decodes schema-less protobuf, gRPC and
+gRPC-web frames, and base64 protobuf bodies into `number: type value` lines and
+re-encodes edits (frame lengths, base64, `Content-Length`). Binary bodies are
+byte-exact with protobuf/gRPC Content-Types on a Lanius that reads those as
+single bytes. It sends no requests. Requires Lanius SDK 1.7.
+
+All seven plugins are independent Lanius SDK implementations and make no
 outbound connections of their own. Parameter Analyzer's active probes use
 the host's explicitly started scanner and Replay path. Dynamic Audit does the
 same and requires Lanius SDK 1.6 for Target site actions.

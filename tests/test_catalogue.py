@@ -52,7 +52,9 @@ def test_source_manifests_and_signed_build_are_accepted_by_lanius(
     assert {plugin["id"] for plugin in verified["plugins"]} == {
         "lanius.additional-flow",
         "lanius.dynamic-audit",
+        "lanius.jwt-toolkit",
         "lanius.parameter-analyzer",
+        "lanius.protobuf-editor",
         "lanius.request-randomizer",
         "lanius.security-headers",
     }

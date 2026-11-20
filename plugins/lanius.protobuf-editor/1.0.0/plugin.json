@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "id": "lanius.protobuf-editor",
+  "name": "Protobuf Editor",
+  "version": "1.0.0",
+  "description": "Decodes and edits schema-less protobuf, gRPC, and base64 protobuf message bodies.",
+  "author": {
+    "name": "Lanius"
+  },
+  "published_at": "2026-11-20T06:00:00Z",
+  "categories": [
+    "analysis",
+    "editor"
+  ],
+  "compatibility": {
+    "lanius": ">=0.5,<1",
+    "sdk": ">=1.7,<2"
+  },
+  "backend": {
+    "runtime": "trusted",
+    "entrypoint": "plugin.py"
+  },
+  "permissions": [],
+  "integrity": {
+    "files": {
+      "plugin.py": "53b0488a264424c021bd4f3e94f32cbb5c47e60e77918c916cfe31143f443149"
+    }
+  }
+}

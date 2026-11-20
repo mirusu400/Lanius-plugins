@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "id": "lanius.jwt-toolkit",
+  "name": "JWT Toolkit",
+  "version": "1.0.0",
+  "description": "Detects, edits, re-signs, and tests JSON Web Tokens for common weaknesses.",
+  "author": {
+    "name": "Lanius"
+  },
+  "published_at": "2026-11-20T05:00:00Z",
+  "categories": [
+    "analysis",
+    "scanner",
+    "editor"
+  ],
+  "compatibility": {
+    "lanius": ">=0.5,<1",
+    "sdk": ">=1.7,<2"
+  },
+  "backend": {
+    "runtime": "trusted",
+    "entrypoint": "plugin.py"
+  },
+  "permissions": [],
+  "integrity": {
+    "files": {
+      "plugin.py": "76b0ca1e7999882d8b932113635e84fe843ed806fc632b2d58ed114628a67cf4"
+    }
+  }
+}

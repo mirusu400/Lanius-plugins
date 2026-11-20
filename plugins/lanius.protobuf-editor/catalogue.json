@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "id": "lanius.protobuf-editor",
+  "details": "Adds a Protobuf tab to message viewers, Replay, Fuzzer, and Intercept. It decodes raw protobuf bodies, gRPC and gRPC-web frames (including grpc-web-text and gzip-compressed frames), and bodies that are entirely base64 protobuf, inferring field types without a .proto file. Edit the 'number: type value' lines and the plugin re-encodes the payload, rebuilding frame lengths, base64, and Content-Length. Binary bodies are byte-exact only with a protobuf or gRPC Content-Type. Includes a Decoder codec. The plugin sends no requests.",
+  "homepage": "https://github.com/mirusu400/Lanius-plugins/tree/main/plugins/lanius.protobuf-editor",
+  "icon": "icon.png"
+}

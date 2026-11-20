@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "id": "lanius.jwt-toolkit",
+  "details": "Finds JSON Web Tokens in headers, cookies, URLs, and bodies. A JWT tab in the message viewer and in Replay/Fuzzer decodes the token and lets you edit header and payload JSON and re-sign it (keep, strip, alg none, or HS256/384/512 with a secret). A passive check reports unsigned or guessable-secret tokens, missing or long expiry, key-source headers, tokens in URLs, and cookie flags without sending traffic. The plugin opens no network connection of its own.",
+  "homepage": "https://github.com/mirusu400/Lanius-plugins/tree/main/plugins/lanius.jwt-toolkit",
+  "icon": "icon.png"
+}
