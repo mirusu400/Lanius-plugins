@@ -49,6 +49,7 @@ def test_security_headers_registers_with_scanner_sdk() -> None:
     assert registry.counts("lanius.security-headers") == {
         "actions": 0,
         "codecs": 0,
+        "message_views": 0,
         "payload_generators": 0,
         "payload_processors": 0,
         "settings": 3,
